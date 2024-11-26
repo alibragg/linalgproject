@@ -1,0 +1,143 @@
+import math
+import numpy as np
+from PIL import Image
+#ls
+
+# Define the image file path
+image_path = "smileyface.jpeg"
+# Load the image
+image0 = Image.open("smileyface.jpeg")
+image0.show()
+
+
+def image_tranform(image_np, linear_transform):
+    # Get the dimensions of the image
+    height, width, channels = image_np.shape
+
+    # Define the center
+    center_x = width / 2
+    center_y = height / 2
+
+    # Loop through each pixel in the image and apply the transformation
+    transformed_image = np.zeros_like(image_np)
+
+    for y in range(height):
+        for x in range(width):
+            # Translate the pixel to the origin
+            translated_x = x - center_x
+            translated_y = -(y - center_y)
+
+            # Apply the transformation: matrix vector multiplication
+            transformed_x, transformed_y = linear_transform @ np.array([translated_x, translated_y])
+
+            # Translate the pixel back to its original position
+            transformed_x += center_x
+            transformed_y = - transformed_y + center_y
+
+            # Round the pixel coordinates to integers
+            transformed_x = int(round(transformed_x))
+            transformed_y = int(round(transformed_y))
+
+            # Copy the pixel to the transformed image
+            if (transformed_x >= 0 and transformed_x < width and
+                    transformed_y >= 0 and transformed_y < height):
+                transformed_image[transformed_y, transformed_x] = image_np[y, x]
+
+    return transformed_image
+
+
+
+
+
+# 1 - scales half the size
+image_np = np.array(image0)
+print(f'The dimension of the image_np is {image_np.shape}')
+# Define the transformatin matrix
+mat = np.array([
+    [0.5, 0],
+    [0, 0.5]
+])
+# apply transform
+new_image_np = image_tranform(image_np, mat)
+# convert a numpy array to image
+new_image = Image.fromarray(new_image_np)
+new_image.show()
+image1 = new_image
+
+
+# 2 - reflects through y=2x
+image_np = np.array(image1)
+print(f'The dimension of the image_np is {image_np.shape}')
+# Define the transformatin matrix
+mat = np.array([
+    [-3/5, 4/5],
+    [4/5, 3/5]
+])
+# apply transform
+new_image_np = image_tranform(image_np, mat)
+# convert a numpy array to image
+new_image = Image.fromarray(new_image_np)
+new_image.show()
+image2 = new_image
+
+
+# 3 - reflects through y=-1/2x
+image_np = np.array(image2)
+print(f'The dimension of the image_np is {image_np.shape}')
+# Define the transformatin matrix
+mat = np.array([
+    [0.6, -0.8],
+    [-0.8, -0.6]
+])
+# apply transform
+new_image_np = image_tranform(image_np, mat)
+# convert a numpy array to image
+new_image = Image.fromarray(new_image_np)
+new_image.show()
+image3 = new_image
+
+
+# 4 - T2*T1
+image_np = np.array(image1)
+print(f'The dimension of the image_np is {image_np.shape}')
+# Define the transformatin matrix
+mat = np.array([
+    [-0.3, 0.4],
+    [0.4, 0.3]
+])
+# apply transform
+new_image_np = image_tranform(image_np, mat)
+# convert a numpy array to image
+new_image = Image.fromarray(new_image_np)
+new_image.show()
+
+
+# 5 - T^-1
+image_np = np.array(image3)
+print(f'The dimension of the image_np is {image_np.shape}')
+# Define the transformatin matrix
+mat = np.array([
+    [-1, 0],
+    [0, -1]
+])
+# apply transform
+new_image_np = image_tranform(image_np, mat)
+# convert a numpy array to image
+new_image = Image.fromarray(new_image_np)
+new_image.show()
+
+
+# 6 - Favorite Transformation - y=3x
+image_np = np.array(image1)
+print(f'The dimension of the image_np is {image_np.shape}')
+# Define the transformatin matrix
+mat = np.array([
+    [-0.8, 0.6],
+    [0.6, 0.8]
+])
+# apply transform
+new_image_np = image_tranform(image_np, mat)
+# convert a numpy array to image
+new_image = Image.fromarray(new_image_np)
+new_image.show()
+image4 = new_image
